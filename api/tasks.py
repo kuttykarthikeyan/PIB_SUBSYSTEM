@@ -3,14 +3,15 @@ from django.core.serializers import serialize
 from django.shortcuts import render, redirect,HttpResponse
 import requests
 import subprocess
-from scripts import *
+from .scripts import *
 import pandas as pd
-
+import pandas as pd
 from .serializers import *
 
 from .scripts.optimized_states_wise import *
 from .scripts.scrap_youtube_data import *
 from .scripts.youtube_video_trimming_process import *
+from main import *
 
 
 
@@ -59,7 +60,7 @@ def scrap_youtube_videos():
         print('sucesssssssssssssssssssssssssssssssss')
         print(data)
         try:
-            post_url = 'http://10.1.75.45:8000/save_youtube_data/'  
+            post_url = 'http://10.1.75.142:8000/save_youtube_data/'  
             response = requests.post(post_url, data=data, headers={'Content-Type': 'application/json'})
            
             if response.status_code == 200:
@@ -83,8 +84,11 @@ def scrap_youtube_videos():
 def scrap_websites_with_clusters():
 
     try:
-        data_frame = scrap_cluster_news()
+        # data_frame = scrap_cluster_news()
+        data_frame = pd.read_csv(r"E:\PIB_SUBSYSTEM\final_data_new.csv")
+        data_frame = data_frame.loc[data_frame["main_text"] != "none"]
         print(data_frame)
+        data_frame.to_csv("final_data.csv")
         print('data recievedddddddddddddddddddddddddddddd')
         try:
             for index, row in data_frame.iterrows():
